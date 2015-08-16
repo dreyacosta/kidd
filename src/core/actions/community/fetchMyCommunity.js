@@ -3,7 +3,7 @@
 var async = require('async');
 var Twitter = require('ntwitter');
 var CONFIG = require('../../../config');
-var calculateMyCommunity = require('../../infrastructure/services/calculateMyCommunity');
+var userService = require('../../model/user/userService');
 
 var twit = new Twitter(CONFIG.test.twitter_tokens);
 
@@ -32,7 +32,7 @@ function fetchMyCommunity(screenName, callback) {
     },
 
     function getMyCommunity(callback) {
-      myCommunity = calculateMyCommunity(followers, followings);
+      myCommunity = userService.calculateMyCommunity(followers, followings);
       return callback();
     }
   ], function onFinish(error) {
