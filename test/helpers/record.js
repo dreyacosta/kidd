@@ -4,6 +4,8 @@ var nock = require('nock');
 var fs = require('fs');
 
 function recordHTTPCalls(name, options) {
+  var that = {};
+
   options = options || {};
 
   var folder = options.folder || __dirname + '/fixtures';
@@ -11,29 +13,28 @@ function recordHTTPCalls(name, options) {
 
   if (!fs.existsSync(folder)) fs.mkdirSync(folder);
 
-  var publicAPI = {};
-
-  publicAPI.before = function before() {
+  that.before = function before() {
     if (hasFixtures) {
-      require(folder + '/' + name + '.js');
+      nock.load(folder + '/' + name + '.json');
     } else {
+      nock.restore();
       nock.recorder.rec({
-        dont_print: true
+        dont_print: true,
+        output_objects: true
       });
     }
   };
 
-  publicAPI.after = function after(callback) {
+  that.after = function after(callback) {
     if (hasFixtures) {
       callback();
     } else {
       var fixtures = nock.recorder.play();
-      var fixturesFile = "var nock = require('nock');\n" + fixtures.join('\n');
-      fs.writeFile(folder + '/' + name + '.js', fixturesFile, callback);
+      fs.writeFile(folder + '/' + name + '.json', JSON.stringify(fixtures), callback);
     }
   };
 
-  return publicAPI;
+  return that;
 }
 
 module.exports = recordHTTPCalls;
