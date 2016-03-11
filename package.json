@@ -4,8 +4,7 @@
   "description": "Pet project to play with some DDD and TDD concepts",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha test/**/unit/**/*_spec.js",
-    "integration": "node_modules/.bin/mocha test/**/integration/**/*_spec.js"
+    "test": "node_modules/.bin/mocha test/*_spec.js"
   },
   "author": "@dreyacosta",
   "license": "MIT",
